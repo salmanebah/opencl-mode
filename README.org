@@ -1,4 +1,24 @@
-opencl-mode-emacs
-=================
+#+TITLE: README
+#+AUTHOR: BAH SALMANE
+#+EMAIL: salmane.bah@u-bordeaux.fr
+#+DATE: 25-06-2014
+#+DESCRIPTION:
+#+LANGUAGE: en
 
-Quick and dirty syntax coloring for opencl kernels
+* opencl-mode-emacs
+** Description
+   Quick and dirty syntax coloring for opencl kernels
+** Installation
+   - clone this repository:
+     #+BEGIN_SRC elisp
+     $ git clone https://github.com/salmanebah/opencl-mode-emacs.git
+     #+END_SRC
+   - Put opencl-mode.el in your load path or optionally add this line to your emacs init file:
+     #+BEGIN_SRC elisp
+      (add-to-list 'load-path "/path/to/directory/where/opecl-mode.el/resides")
+     #+END_SRC
+   - Add these lines to your emacs init file:
+     #+BEGIN_SRC elisp
+     (require 'opencl-mode)
+     (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))   
+     #+END_SRC
