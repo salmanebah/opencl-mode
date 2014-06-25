@@ -25,12 +25,12 @@
 ;;;###autoload  regexp string for opencl symbol class
 ;;(eval-when-compile
   ;;(require 'c-mode))
-;;(require 'auto-complete)
+
 
 
 
 (defvar-local *opencl-extension-color* "#A82848"
-  "color opencl extension")
+  "opencl extension color")
 
 (defface font-lock-opencl-face
   `((t (:foreground ,*opencl-extension-color* :weight bold)))
@@ -70,13 +70,27 @@
 
 (define-derived-mode opencl-mode c-mode "Opencl"
   "Major mode for opencl kernel editing"
-  ;;(auto-complete-mode)
   (setcar font-lock-defaults (append c-font-lock-keywords opencl-font-lock-keywords)))
 
 ;; add more keywords
 (font-lock-add-keywords 'opencl-mode
 			`((,opencl-image-type-regexp . font-lock-type-face)))
-			 
+
+(defun opencl-lookup ()
+  "Get opencl documentation for string in region or point."
+  (interactive)
+  (let (api-function doc-url)
+    (setq api-function
+	  (if (region-active-p)
+	      (buffer-substring-no-properties (region-beginning)
+					      (region-end))
+	    (thing-at-point 'symbol)))
+    (setq doc-url (concat
+		   "http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/"
+		   api-function ".html"))
+    (browse-url doc-url)))
+
+(define-key opencl-mode-map (kbd "C-c ! d") 'opencl-lookup)
 
 (provide 'opencl-mode)
 

@@ -10,7 +10,7 @@
    Quick and dirty syntax coloring for opencl kernels
 ** Installation
    - clone this repository:
-     #+BEGIN_SRC elisp
+     #+BEGIN_SRC sh
      $ git clone https://github.com/salmanebah/opencl-mode-emacs.git
      #+END_SRC
    - Put opencl-mode.el in your load path or optionally add this line to your emacs init file:
