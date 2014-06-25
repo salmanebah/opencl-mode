@@ -22,3 +22,12 @@
      (require 'opencl-mode)
      (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))   
      #+END_SRC
+** Note
+   The *opencl-lookup* function (bound to C-c ! d) allows one to lookup the opencl documentation of
+   the string in region or on point.
+   if the w3m browser for emacs is installed, one can enjoy the documentation lookup within 
+   emacs by adding this line to the init file
+     #+BEGIN_SRC elisp
+      (setq browse-url-browser-function 'w3m-browse-url)
+     #+END_SRC
+   
