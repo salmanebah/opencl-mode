@@ -7,27 +7,31 @@
 
 * opencl-mode-emacs
 ** Description
-   Quick and dirty syntax coloring for opencl kernels
+   Quick and dirty syntax coloring for opencl kernels and more
 ** Installation
-   - clone this repository:
-     #+BEGIN_SRC sh
-     $ git clone https://github.com/salmanebah/opencl-mode-emacs.git
-     #+END_SRC
-   - Put opencl-mode.el in your load path or optionally add this line to your emacs init file:
+   1. Get the source code by either:
+      - Cloning this repository:
+        #+BEGIN_SRC sh
+        $ git clone https://github.com/salmanebah/opencl-mode-emacs.git
+        #+END_SRC
+      - Downloading the Zip
+   2. Put opencl-mode.el in your load path or optionally add this line to your emacs init file:
      #+BEGIN_SRC elisp
       (add-to-list 'load-path "/path/to/directory/where/opecl-mode.el/resides")
      #+END_SRC
-   - Add these lines to your emacs init file:
+   3. Add these lines to your emacs init file:
      #+BEGIN_SRC elisp
      (require 'opencl-mode)
      (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))   
      #+END_SRC
-** Note
-   The *opencl-lookup* function (bound to C-c ! d) allows one to lookup the opencl documentation of
-   the string in region or on point.
-   if the w3m browser for emacs is installed, one can enjoy the documentation lookup within 
-   emacs by adding this line to the init file
+** Notes
+   - The *opencl-lookup* function (bound to C-c ! d) allows one to lookup the documentation of
+     the string in region or on point.
+     if the w3m browser for emacs is installed, one can enjoy the documentation lookup within 
+     emacs by adding this line to the init file
      #+BEGIN_SRC elisp
       (setq browse-url-browser-function 'w3m-browse-url)
      #+END_SRC
+   - Being a strict superset of the emacs c-mode, opencl-mode can be used to write code for
+     the host side, the benefit being the usage of the *opencl-lookup* function
    
