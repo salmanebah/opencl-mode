@@ -55,9 +55,10 @@
 
 (define-local-var opencl-constant-regexp (regexp-opt '("MAXFLOAT" "HUGE_VALF"
 						   "INFINITY" "NAN" "HUGE_VAL") 'words))
-;; TODO : image datatype , ptr data
 (define-local-var opencl-types-regexp
   "\\(char\\|short\\|half\\|int\\|double\\|float\\|long\\|uchar\\|ushort\\|uint\\|ulong\\)[[:digit:]]\\{0,2\\}[[:blank:]\n]+")
+(define-local-var opencl-scalar-types-regexp (regexp-opt '("bool" "size_t" "ptrdiff_t" "intptr_t" "uintptr_t")
+							 'words))
 
 (define-local-var opencl-image-type-regexp (regexp-opt '("image2d_t" "image3d_t"
 						     "image2d_array_t" "image3d_array_t"
@@ -70,6 +71,7 @@
 (define-local-var opencl-font-lock-keywords
   `((,opencl-functions-regexp . font-lock-builtin-face)
     (,opencl-types-regexp . font-lock-type-face)
+    (,opencl-scalar-types-regexp . font-lock-type-face)
     (,opencl-constant-regexp . font-lock-constant-face)
     (,opencl-keywords-regexp . font-lock-keyword-face)
     (,opencl-extension-regexp . 'font-lock-opencl-face)))
