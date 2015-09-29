@@ -26,9 +26,13 @@
      #+END_SRC
 ** Notes
    - The *opencl-lookup* function (bound to C-c ! d) allows one to lookup the documentation of
-     the string in region or on point.
-     if the w3m browser for emacs is installed, one can enjoy the documentation lookup within 
-     emacs by adding this line to the init file
+     the string in region or on point. Starting from version 24.4, emacs comes with a built-in web browser, 
+     adding the following line  to the init file displays the documentation in emacs
+     #+BEGIN_SRC elisp
+      (setq browse-url-browser-function 'eww-browse-url)
+     #+END_SRC     
+     For versions of emacs prior to 24.4 and if the w3m browser is installed, adding 
+     the following line in the init file will have the same effect
      #+BEGIN_SRC elisp
       (setq browse-url-browser-function 'w3m-browse-url)
      #+END_SRC
