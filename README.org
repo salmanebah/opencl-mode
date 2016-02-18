@@ -7,7 +7,7 @@
 
 * opencl-mode-emacs
 ** Description
-   Quick and dirty syntax coloring for opencl kernels and more
+   Syntax coloring for opencl kernels
 ** Installation
    1. Get the source code by either:
       - Cloning this repository:
@@ -37,5 +37,4 @@
       (setq browse-url-browser-function 'w3m-browse-url)
      #+END_SRC
    - Being a strict superset of the emacs c-mode, opencl-mode can be used to write code for
-     the host side, the benefit being the use of the *opencl-lookup* function
-   
+     the host side, the benefit being the use of the *opencl-lookup* function.
