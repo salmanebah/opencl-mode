@@ -37,68 +37,62 @@
 ;; for c-font-lock-keywords
 (require 'cc-fonts)
 
-(make-variable-buffer-local
- (defvar *opencl-extension-color* "#A82848"
-  "opencl extension color"))
+(defvar opencl-extension-color "#A82848"
+  "opencl extension color")
 
 (defface font-lock-opencl-face
-  `((t (:foreground ,*opencl-extension-color* :weight bold)))
+  `((t (:foreground ,opencl-extension-color :weight bold)))
   "custom face for cl-extension"
   :group 'opencl-faces)
 
-(make-variable-buffer-local
- (defvar opencl-keywords-regexp
-   "\\(__\\)?\\(kernel\\|global\\|local\\|constant\\|private\\|read_only\\|write_only\\|read_write\\|enable\\|disable\\)[[:blank:]\n]+"
-   "Regexp for opencl keywords"))
+(defvar opencl-keywords-regexp
+  (concat "\\(__\\)?"
+          (regexp-opt '("kernel" "global" "local" "constant" "private" "read_only" "write_only" "read_write" "enable" "disable") t)
+          "[[:blank:]\n]+")
+  "Regexp for opencl keywords")
 
-(make-variable-buffer-local
- (defvar opencl-functions-regexp
-   (regexp-opt '("get_work_dim" "get_global_size"
-		 "get_local_size" "get_global_id"
-		 "get_local_id" "get_num_groups"
-		 "get_group_id" "get_global_offset") 'words)
-   "Regexp for builtin opencl fucntions"))
+(defvar opencl-functions-regexp
+  (regexp-opt '("get_work_dim" "get_global_size"
+                "get_local_size" "get_global_id"
+                "get_local_id" "get_num_groups"
+                "get_group_id" "get_global_offset") 'words)
+  "Regexp for builtin opencl fucntions")
 
-(make-variable-buffer-local
-  (defvar opencl-constant-regexp
-    (regexp-opt '("MAXFLOAT" "HUGE_VALF"
-		  "INFINITY" "NAN" "HUGE_VAL") 'words)
-    "Regexp for opencl constant"))
+(defvar opencl-constant-regexp
+  (regexp-opt '("MAXFLOAT" "HUGE_VALF"
+                "INFINITY" "NAN" "HUGE_VAL") 'words)
+  "Regexp for opencl constant")
 
-(make-variable-buffer-local
- (defvar opencl-types-regexp
-   "\\(char\\|short\\|half\\|int\\|double\\|float\\|long\\|uchar\\|ushort\\|uint\\|ulong\\)[[:digit:]]\\{0,2\\}[[:blank:]\n]+"
-   "Regexp for opencl primitive types"))
+(defvar opencl-types-regexp
+  (concat (regexp-opt '("char" "short" "half" "int" "double" "float" "long" "uchar" "ushort" "uint" "ulong") t)
+          "[[:digit:]]\\{0,2\\}[[:blank:]\n]+")
+  "Regexp for opencl primitive types")
 
-(make-variable-buffer-local
- (defvar opencl-scalar-types-regexp
-   (regexp-opt '("bool" "size_t" "ptrdiff_t" "intptr_t" "uintptr_t")
-	       'words)
-   "Regexp for opencl scalar types"))
+(defvar opencl-scalar-types-regexp
+  (regexp-opt '("bool" "size_t" "ptrdiff_t" "intptr_t" "uintptr_t")
+              'words)
+  "Regexp for opencl scalar types")
 
-(make-variable-buffer-local
- (defvar opencl-image-type-regexp
-   (regexp-opt '("image2d_t" "image3d_t"
-		 "image2d_array_t" "image3d_array_t"
-		 "image1d_array_t" "image1d_t"
-		 "image1d_buffer_t" "sampler_t"
-		 "event_t") 'words)
-   "Regexp for opencl image types"))
+(defvar opencl-image-type-regexp
+  (regexp-opt '("image2d_t" "image3d_t"
+                "image2d_array_t" "image3d_array_t"
+                "image1d_array_t" "image1d_t"
+                "image1d_buffer_t" "sampler_t"
+                "event_t") 'words)
+  "Regexp for opencl image types")
 
-(make-variable-buffer-local
- (defvar opencl-extension-regexp "cl_khr_[a-zA-Z][a-zA-Z_0-9]+"
-   "Regex for opencl extensions"))
+(defvar opencl-extension-regexp "cl_khr_[a-zA-Z][a-zA-Z_0-9]+"
+  "Regex for opencl extensions")
 
-(make-variable-buffer-local
- (defvar opencl-font-lock-keywords
-   `((,opencl-functions-regexp . font-lock-builtin-face)
-     (,opencl-types-regexp . font-lock-type-face)
-     (,opencl-scalar-types-regexp . font-lock-type-face)
-     (,opencl-constant-regexp . font-lock-constant-face)
-     (,opencl-keywords-regexp . font-lock-keyword-face)
-     (,opencl-image-type-regexp . font-lock-type-face)
-     (,opencl-extension-regexp . 'font-lock-opencl-face))
-   "Font-lock for opencl keywords"))
+(defvar opencl-font-lock-keywords
+  `((,opencl-functions-regexp . font-lock-builtin-face)
+    (,opencl-types-regexp . font-lock-type-face)
+    (,opencl-scalar-types-regexp . font-lock-type-face)
+    (,opencl-constant-regexp . font-lock-constant-face)
+    (,opencl-keywords-regexp . font-lock-keyword-face)
+    (,opencl-image-type-regexp . font-lock-type-face)
+    (,opencl-extension-regexp . 'font-lock-opencl-face))
+  "Font-lock for opencl keywords")
 
 
 (define-derived-mode opencl-mode c-mode "Opencl"
@@ -108,15 +102,13 @@
 (defun opencl-lookup ()
   "Get opencl documentation for string in region or point."
   (interactive)
-  (let (api-function doc-url)
-    (setq api-function
-	  (if (region-active-p)
-	      (buffer-substring-no-properties (region-beginning)
-					      (region-end))
-	    (thing-at-point 'symbol)))
-    (setq doc-url (concat
-		   "http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/"
-		   api-function ".html"))
+  (let* ((api-function (if (region-active-p)
+                           (buffer-substring-no-properties (region-beginning)
+                                                           (region-end))
+                         (thing-at-point 'symbol)))
+         (doc-url (concat
+                   "http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/"
+                   api-function ".html")))
     (browse-url doc-url)))
 
 (define-key opencl-mode-map (kbd "C-c ! d") 'opencl-lookup)
