@@ -1,23 +1,28 @@
-#+TITLE: README
+#+TITLE: Opencl-mode
 #+AUTHOR: BAH SALMANE
 #+EMAIL: salmane.bah@u-bordeaux.fr
 #+DATE: 25-06-2014
 #+DESCRIPTION:
 #+LANGUAGE: en
 
-* opencl-mode-emacs
-** Description
-   Syntax coloring for opencl kernels
-** Installation
+[[https://melpa.org/#/opencl-mode][file:https://melpa.org/packages/opencl-mode-badge.svg]]
+
+Syntax coloring for opencl kernels
+
+** Installation with Melpa
+   #+BEGIN_SRC sh
+   M-x package-install RET opencl-mode RET
+   #+END_SRC
+** Installation from source code
    1. Get the source code by either:
       - Cloning this repository:
         #+BEGIN_SRC sh
-        $ git clone https://github.com/salmanebah/opencl-mode-emacs.git
+        $ git clone https://github.com/salmanebah/opencl-mode.git
         #+END_SRC
       - Downloading the Zip
    2. Put opencl-mode.el in your load path or optionally add this line to your emacs init file:
      #+BEGIN_SRC elisp
-      (add-to-list 'load-path "/path/to/directory/where/opecl-mode.el/resides")
+      (add-to-list 'load-path "/path/to/directory/where/opencl-mode.el/resides")
      #+END_SRC
    3. Add these lines to your emacs init file:
      #+BEGIN_SRC elisp
