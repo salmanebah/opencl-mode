@@ -94,7 +94,7 @@
     (,opencl-extension-regexp . 'font-lock-opencl-face))
   "Font-lock for opencl keywords")
 
-
+;;;###autoload
 (define-derived-mode opencl-mode c-mode "Opencl"
   "Major mode for opencl kernel editing"
   (setcar font-lock-defaults (append c-font-lock-keywords opencl-font-lock-keywords)))
