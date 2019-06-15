@@ -107,7 +107,7 @@
                                                            (region-end))
                          (thing-at-point 'symbol)))
          (doc-url (concat
-                   "http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/"
+                   "http://www.khronos.org/registry/cl/sdk/2.1/docs/man/xhtml/"
                    api-function ".html")))
     (browse-url doc-url)))
 
