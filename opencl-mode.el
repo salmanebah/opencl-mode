@@ -97,7 +97,7 @@
 ;;;###autoload
 (define-derived-mode opencl-mode c-mode "Opencl"
   "Major mode for opencl kernel editing"
-  (setcar font-lock-defaults (append c-font-lock-keywords opencl-font-lock-keywords)))
+  (font-lock-add-keywords nil opencl-font-lock-keywords))
 
 (defun opencl-lookup ()
   "Get opencl documentation for string in region or point."
