@@ -113,5 +113,8 @@
 
 (define-key opencl-mode-map (kbd "C-c ! d") 'opencl-lookup)
 
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))
+
 (provide 'opencl-mode)
 ;;; opencl-mode.el ends here
