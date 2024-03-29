@@ -1,8 +1,10 @@
-;;; opencl-mode.el --- Syntax coloring for opencl kernels
+;;; opencl-c-mode.el --- Syntax coloring for opencl kernels -*- lexical-binding: t -*-
 
-;; Copyright (c) 2014 - Salmane Bah <salmane.bah@u-bordeaux.fr>
+;; Copyright (c) 2014- Salmane Bah <salmane.bah ~at~ u-bordeaux.fr>
+;; Copyright (c) 2024- Gustaf Waldemarson <gustaf.waldemarson ~at~ gmail.com>
 ;;
-;; Author: Salmane Bah <salmane.bah@u-bordeaux.fr>
+;; Authors: Salmane Bah <salmane.bah ~at~ u-bordeaux.fr>
+;;          Gustaf Waldemarson <gustaf.waldemarson ~at~ gmail.com>
 ;; Keywords: c, opencl
 ;; URL: https://github.com/salmanebah/opencl-mode
 ;; Version: 1.0
@@ -26,81 +28,77 @@
 
 ;;; Installation:
 
-;; 1- Put opencl-mode.el in your load path or optionally add this line to your Emacs init file:
-;;    (add-to-list 'load-path "/path/to/directory/where/opencl-mode.el/resides")
-;; 2- Add these lines to your Emacs init file
-;;    (require 'opencl-mode)
-;;    (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))
+;; Major mode for editing OpenCL-C files.
 
 ;;; Code:
 
 ;; for c-font-lock-keywords
 (require 'cc-fonts)
 
-(defvar opencl-extension-color "#A82848"
-  "opencl extension color")
+(defvar opencl-c-extension-color "#A82848"
+  "OpenCL shader extension specification color.")
 
-(defface font-lock-opencl-face
-  `((t (:foreground ,opencl-extension-color :weight bold)))
-  "custom face for cl-extension"
-  :group 'opencl-faces)
+(defface font-lock-opencl-c-face
+  `((t (:foreground ,opencl-c-extension-color :weight bold)))
+  "Custom face for OpenCL shader extensions."
+  :group 'opencl-c-faces)
 
-(defvar opencl-keywords-regexp
+(defvar opencl-c-keywords-regexp
   (concat "\\(__\\)?"
           (regexp-opt '("kernel" "global" "local" "constant" "private" "read_only" "write_only" "read_write" "enable" "disable") t)
           "[[:blank:]\n]+")
-  "Regexp for opencl keywords")
+  "Regexp for OpenCL keywords.")
 
-(defvar opencl-functions-regexp
+(defvar opencl-c-functions-regexp
   (regexp-opt '("get_work_dim" "get_global_size"
                 "get_local_size" "get_global_id"
                 "get_local_id" "get_num_groups"
                 "get_group_id" "get_global_offset") 'words)
-  "Regexp for builtin opencl fucntions")
+  "Regexp for builtin OpenCL functions.")
 
-(defvar opencl-constant-regexp
+(defvar opencl-c-constant-regexp
   (regexp-opt '("MAXFLOAT" "HUGE_VALF"
                 "INFINITY" "NAN" "HUGE_VAL") 'words)
-  "Regexp for opencl constant")
+  "Regexp for OpenCL constant.")
 
-(defvar opencl-types-regexp
+(defvar opencl-c-types-regexp
   (concat (regexp-opt '("char" "short" "half" "int" "double" "float" "long" "uchar" "ushort" "uint" "ulong") t)
           "[[:digit:]]\\{0,2\\}[[:blank:]\n]+")
-  "Regexp for opencl primitive types")
+  "Regexp for OpenCL primitive types.")
 
-(defvar opencl-scalar-types-regexp
+(defvar opencl-c-scalar-types-regexp
   (regexp-opt '("bool" "size_t" "ptrdiff_t" "intptr_t" "uintptr_t")
               'words)
-  "Regexp for opencl scalar types")
+  "Regexp for OpenCL scalar types.")
 
-(defvar opencl-image-type-regexp
+(defvar opencl-c-image-type-regexp
   (regexp-opt '("image2d_t" "image3d_t"
                 "image2d_array_t" "image3d_array_t"
                 "image1d_array_t" "image1d_t"
                 "image1d_buffer_t" "sampler_t"
                 "event_t") 'words)
-  "Regexp for opencl image types")
+  "Regexp for OpenCL image types.")
 
-(defvar opencl-extension-regexp "cl_khr_[a-zA-Z][a-zA-Z_0-9]+"
-  "Regex for opencl extensions")
+(defvar opencl-c-extension-regexp "cl_khr_[a-zA-Z][a-zA-Z_0-9]+"
+  "Regex for OpenCL extensions.")
 
-(defvar opencl-font-lock-keywords
-  `((,opencl-functions-regexp . font-lock-builtin-face)
-    (,opencl-types-regexp . font-lock-type-face)
-    (,opencl-scalar-types-regexp . font-lock-type-face)
-    (,opencl-constant-regexp . font-lock-constant-face)
-    (,opencl-keywords-regexp . font-lock-keyword-face)
-    (,opencl-image-type-regexp . font-lock-type-face)
-    (,opencl-extension-regexp . 'font-lock-opencl-face))
-  "Font-lock for opencl keywords")
+(defvar opencl-c-font-lock-keywords
+  `((,opencl-c-functions-regexp . font-lock-builtin-face)
+    (,opencl-c-types-regexp . font-lock-type-face)
+    (,opencl-c-scalar-types-regexp . font-lock-type-face)
+    (,opencl-c-constant-regexp . font-lock-constant-face)
+    (,opencl-c-keywords-regexp . font-lock-keyword-face)
+    (,opencl-c-image-type-regexp . font-lock-type-face)
+    (,opencl-c-extension-regexp . 'font-lock-opencl-c-face))
+  "Font-lock for OpenCL keywords.")
 
 ;;;###autoload
-(define-derived-mode opencl-mode c-mode "Opencl"
-  "Major mode for opencl kernel editing"
-  (font-lock-add-keywords nil opencl-font-lock-keywords))
+(define-derived-mode opencl-c-mode c-mode "Opencl"
+  "Major mode for editing OpenCL C kernels."
+  (font-lock-add-keywords nil opencl-c-font-lock-keywords))
 
-(defun opencl-lookup ()
-  "Get opencl documentation for string in region or point."
+(defun opencl-c-lookup ()
+  "Get OpenCL documentation for string in region or point."
   (interactive)
   (let* ((api-function (if (region-active-p)
                            (buffer-substring-no-properties (region-beginning)
@@ -111,7 +109,7 @@
                    api-function ".html")))
     (browse-url doc-url)))
 
-(define-key opencl-mode-map (kbd "C-c ! d") 'opencl-lookup)
+(define-key opencl-c-mode-map (kbd "C-c ! d") 'opencl-c-lookup)
 
-(provide 'opencl-mode)
-;;; opencl-mode.el ends here
+(provide 'opencl-c-mode)
+;;; opencl-c-mode.el ends here
