@@ -32,69 +32,191 @@
 
 ;;; Code:
 
-;; for c-font-lock-keywords
-(require 'cc-fonts)
+(require 'cc-mode)
+(eval-when-compile
+  (require 'cc-langs)
+  (require 'cc-fonts))
 
 (defvar opencl-c-extension-color "#A82848"
   "OpenCL shader extension specification color.")
 
-(defface font-lock-opencl-c-face
+(defvar opencl-c-extension-face 'opencl-c-extension-face)
+(defface opencl-c-extension-face
   `((t (:foreground ,opencl-c-extension-color :weight bold)))
   "Custom face for OpenCL shader extensions."
   :group 'opencl-c-faces)
 
-(defvar opencl-c-keywords-regexp
-  (concat "\\(__\\)?"
-          (regexp-opt '("kernel" "global" "local" "constant" "private" "read_only" "write_only" "read_write" "enable" "disable") t)
-          "[[:blank:]\n]+")
-  "Regexp for OpenCL keywords.")
 
-(defvar opencl-c-functions-regexp
-  (regexp-opt '("get_work_dim" "get_global_size"
-                "get_local_size" "get_global_id"
-                "get_local_id" "get_num_groups"
-                "get_group_id" "get_global_offset") 'words)
-  "Regexp for builtin OpenCL functions.")
+(defvar opencl-c-builtins
+  '("get_work_dim"
+    "get_global_size"
+    "get_local_size"
+    "get_global_id"
+    "get_local_id"
+    "get_num_groups"
+    "get_group_id"
+    "get_global_offset")
+  "List of builtin OpenCL functions.")
 
-(defvar opencl-c-constant-regexp
-  (regexp-opt '("MAXFLOAT" "HUGE_VALF"
-                "INFINITY" "NAN" "HUGE_VAL") 'words)
-  "Regexp for OpenCL constant.")
+(defvar opencl-c-constants
+  '("MAXFLOAT"
+    "HUGE_VALF"
+    "INFINITY"
+    "NAN"
+    "HUGE_VAL")
+  "List of OpenCL constant.")
 
-(defvar opencl-c-types-regexp
-  (concat (regexp-opt '("char" "short" "half" "int" "double" "float" "long" "uchar" "ushort" "uint" "ulong") t)
-          "[[:digit:]]\\{0,2\\}[[:blank:]\n]+")
-  "Regexp for OpenCL primitive types.")
+(defvar opencl-c-primitive-types
+  '("bool"
+    "char"
+    "uchar"
+    "short"
+    "ushort"
+    "int"
+    "uint"
+    "long"
+    "ulong"
+    "half"
+    "float"
+    "double"
+    "size_t"
+    "ptrdiff_t"
+    "intptr_t"
+    "uintptr_t"
+    "void")
+  "List of primitive types in OpenCL C.")
 
-(defvar opencl-c-scalar-types-regexp
-  (regexp-opt '("bool" "size_t" "ptrdiff_t" "intptr_t" "uintptr_t")
-              'words)
-  "Regexp for OpenCL scalar types.")
+(defvar opencl-c-vector-types
+  (mapcan (lambda (type)
+            (mapcar (lambda (n) (concat type (number-to-string n)))
+                    '(2 3 4 8 16)))
+          '("char" "uchar" "short" "ushort" "int" "uint"
+            "long" "ulong" "float" "double"))
+  "List of all vector types in OpenCL C.")
 
-(defvar opencl-c-image-type-regexp
-  (regexp-opt '("image2d_t" "image3d_t"
-                "image2d_array_t" "image3d_array_t"
-                "image1d_array_t" "image1d_t"
-                "image1d_buffer_t" "sampler_t"
-                "event_t") 'words)
-  "Regexp for OpenCL image types.")
+(defvar opencl-c-descriptor-types
+  '("image2d_t"
+    "image3d_t"
+    "image2d_array_t"
+    "image1d_t"
+    "image1d_array_t"
+    "image1d_buffer_t"
+    "image2d_depth_t"
+    "image2d_array_depth_t"
+    "sampler_t"
+    "queue_t"
+    "ndrange_t"
+    "clk_event_t"
+    "reserve_id_t"
+    "event_t"
+    "cl_mem_fence_flags")
+  "List of all other OpenCL types.")
 
-(defvar opencl-c-extension-regexp "cl_khr_[a-zA-Z][a-zA-Z_0-9]+"
+
+(defvar opencl-c-builtins-rx (regexp-opt opencl-c-builtins 'symbols))
+
+(defvar opencl-c-extensions-rx
+  (rx (group-n 1 "#pragma")
+      (+ (in space))
+      (seq "OPENCL" (+ (in space)) "EXTENSION" (+ (in space)))
+      (group-n 2 (seq "cl_khr_" (in "a-zA-Z") (+ (in "a-zA-Z_0-9"))))
+      (* (in space)) ":" (* (in space))
+      (or (group-n 3 (or "require" "enable"))
+          (group-n 4 (or "warn" "disable"))))
   "Regex for OpenCL extensions.")
 
+
 (defvar opencl-c-font-lock-keywords
-  `((,opencl-c-functions-regexp . font-lock-builtin-face)
-    (,opencl-c-types-regexp . font-lock-type-face)
-    (,opencl-c-scalar-types-regexp . font-lock-type-face)
-    (,opencl-c-constant-regexp . font-lock-constant-face)
-    (,opencl-c-keywords-regexp . font-lock-keyword-face)
-    (,opencl-c-image-type-regexp . font-lock-type-face)
-    (,opencl-c-extension-regexp . 'font-lock-opencl-c-face))
-  "Font-lock for OpenCL keywords.")
+  `((,opencl-c-builtins-rx . font-lock-builtin-face)
+    (,opencl-c-extensions-rx (2 'opencl-c-extension-face nil lax)
+                     (3 '(face font-lock-keyword-face) nil lax)
+                     (4 '(face font-lock-warning-face) nil lax)))
+  "Additional font-locking rules for OpenCL C.")
+
+(defvar opencl-c-mode-syntax-table
+  (let ((tbl (make-syntax-table c-mode-syntax-table)))
+    tbl)
+  "Syntax table for `opencl-c-mode'.")
+
+(defvar opencl-c-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c ! d") 'opencl-c-lookup)
+    map)
+  "Keymap for `opencl-c-mode'.")
+
+(defvar opencl-c-mode-hook nil "Mode hook for `opencl-c-mode'.")
+
+
+(eval-and-compile (c-add-language 'opencl-c-mode 'c-mode))
+
+(c-lang-defconst c-primitive-type-kwds
+  "Primitive type keywords.  As opposed to the other keyword lists, the
+keywords listed here are fontified with the type face instead of the
+keyword face.
+
+If any of these also are on `c-type-list-kwds', `c-ref-list-kwds',
+`c-colon-type-list-kwds', `c-paren-nontype-kwds', `c-paren-type-kwds',
+`c-<>-type-kwds', or `c-<>-arglist-kwds' then the associated clauses
+will be handled.
+
+Do not try to modify this list for end user customizations; the
+`*-font-lock-extra-types' variable, where `*' is the mode prefix, is
+the appropriate place for that."
+  glsl
+  (append
+   opencl-c-primitive-types
+   opencl-c-vector-types
+   opencl-c-descriptor-types
+   ;; Use append to not be destructive on the return value below.
+   (append
+    (c-lang-const c-primitive-type-kwds)
+    nil)))
+
+(c-lang-defconst c-modifier-kwds
+  opencl-c
+  (append (c-lang-const c-modifier-kwds)
+          '("__kernel" "__global" "__local" "__constant" "__private" "__generic"
+            "__read_only" "__write_only" "__read_write"
+            "kernel" "global" "local" "constant" "private" "generic"
+            "read_only" "write_only" "read_write"
+            "uniform" "pipe")))
+
+(defconst opencl-c-font-lock-keywords-1 (c-lang-const c-matchers-1 opencl-c))
+(defconst opencl-c-font-lock-keywords-2 (c-lang-const c-matchers-2 opencl-c))
+(defconst opencl-c-font-lock-keywords-3 (c-lang-const c-matchers-3 opencl-c))
+(defvar opencl-c-font-lock-keywords (c-lang-const c-matchers-3 opencl-c))
+(defun opencl-c-font-lock-keywords ()
+  "Compose a list of font-locking keywords for `opencl-c-mode'."
+  (c-compose-keywords-list opencl-c-font-lock-keywords))
+
 
 ;;;###autoload
-(define-derived-mode opencl-c-mode c-mode "Opencl"
-  "Major mode for editing OpenCL C kernels."
+(progn
+  (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-c-mode))
+  (add-to-list 'auto-mode-alist '("\\.clc\\'" . opencl-c-mode))
+  (add-to-list 'auto-mode-alist '("\\.opencl\\'" . opencl-c-mode)))
+
+;;;###autoload
+(define-derived-mode opencl-c-mode prog-mode "OpenCL[C]"
+  "Major mode for editing OpenCL C kernels.
+
+\\{opencl-c-mode-map}"
+  :syntax-table opencl-c-mode-syntax-table
+  :after-hook (progn (c-make-noise-macro-regexps)
+		     (c-make-macro-with-semi-re)
+		     (c-update-modeline))
+  (c-initialize-cc-mode t)
+  (c-init-language-vars opencl-c-mode)
+  (c-common-init 'opencl-c-mode)
+  (cc-imenu-init cc-imenu-c++-generic-expression)
+
+  (c-run-mode-hooks 'c-mode-common-hook)
+  (run-mode-hooks 'opencl-c-mode-hook)
+
+  (setq-local comment-start "// ")
+  (setq-local comment-end "")
+  (setq-local comment-padding "")
+
   (font-lock-add-keywords nil opencl-c-font-lock-keywords))
 
 (defun opencl-c-lookup ()
@@ -108,8 +230,6 @@
                    "http://www.khronos.org/registry/cl/sdk/2.1/docs/man/xhtml/"
                    api-function ".html")))
     (browse-url doc-url)))
-
-(define-key opencl-c-mode-map (kbd "C-c ! d") 'opencl-c-lookup)
 
 (provide 'opencl-c-mode)
 ;;; opencl-c-mode.el ends here
