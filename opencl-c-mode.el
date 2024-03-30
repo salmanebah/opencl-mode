@@ -55,15 +55,103 @@
     "get_local_id"
     "get_num_groups"
     "get_group_id"
-    "get_global_offset")
+    "get_global_offset"
+
+    "ATOMIC_VAR_INIT")
   "List of builtin OpenCL functions.")
 
+(defvar opencl-c-floating-point-constants
+  (mapcan
+   (lambda (type)
+     (mapcar (lambda (prefix) (concat prefix type)) '("HALF_" "FLT_" "DBL_")))
+   '("DIG"
+     "MANT_DIG"
+     "MAX_10_EXP"
+     "MAX_EXP"
+     "MIN_10_EXP"
+     "MIN_EXP"
+     "MAX"
+     "MIN"
+     "EPSILON"))
+  "List of all floating point constants in OpenCL C.")
+
+(defvar opencl-c-math-constants
+  (mapcan
+   (lambda (constant)
+     (mapcar (lambda (suffix) (concat constant suffix)) '("_H" "_F" "")))
+   '("M_E"
+     "M_LOG2E"
+     "M_LOG10E"
+     "M_LN2"
+     "M_LN10"
+     "M_PI"
+     "M_PI_2"
+     "M_PI_4"
+     "M_1_PI"
+     "M_2_PI"
+     "M_2_SQRTPI"
+     "M_SQRT2"
+     "M_SQRT1_2"))
+  "List of all mathematical constants in OpenCL C.")
+
 (defvar opencl-c-constants
-  '("MAXFLOAT"
+  `("MAXFLOAT"
     "HUGE_VALF"
     "INFINITY"
     "NAN"
-    "HUGE_VAL")
+    "HUGE_VAL"
+
+    "FP_ILOGB0"
+    "FP_ILOGBNAN"
+
+    "CHAR_BIT"
+    "CHAR_MAX"
+    "CHAR_MIN"
+    "INT_MAX"
+    "INT_MIN"
+    "LONG_MAX"
+    "LONG_MIN"
+    "SCHAR_MAX"
+    "SCHAR_MIN"
+    "SHRT_MAX"
+    "SHRT_MIN"
+    "UCHAR_MAX"
+    "USHRT_MAX"
+    "UINT_MAX"
+    "ULONG_MAX"
+
+    ,@opencl-c-math-constants
+    ,@opencl-c-floating-point-constants
+
+    "ATOMIC_FLAG_INIT"
+
+    "memory_order_relaxed"
+    "memory_order_acquire"
+    "memory_order_release"
+    "memory_order_acq_rel"
+    "memory_order_seq_cst"
+
+    "memory_scope_work_item"
+    "memory_scope_sub_group"
+    "memory_scope_work_group"
+    "memory_scope_device"
+    "memory_scope_all_svm_devices"
+    "memory_scope_all_devices"
+
+    "CLK_GLOBAL_MEM_FENCE"
+    "CLK_LOCAL_MEM_FENCE"
+    "CLK_IMAGE_MEM_FENCE"
+
+    "CLK_NORMALIZED_COORDS_TRUE"
+    "CLK_NORMALIZED_COORDS_FALSE"
+    "CLK_ADDRESS_MIRRORED_REPEAT"
+    "CLK_ADDRESS_REPEAT"
+    "CLK_ADDRESS_CLAMP_TO_EDGE"
+    "CLK_ADDRESS_CLAMP"
+    "CLK_ADDRESS_NONE"
+
+    "CLK_FILTER_NEAREST"
+    "CLK_FILTER_LINEAR")
   "List of OpenCL constant.")
 
 (defvar opencl-c-primitive-types
@@ -85,6 +173,19 @@
     "uintptr_t"
     "void")
   "List of primitive types in OpenCL C.")
+
+(defvar opencl-c-atomic-types
+  '("atomic_int"
+    "atomic_uint"
+    "atomic_long"
+    "atomic_ulong"
+    "atomic_float"
+    "atomic_double"
+    "atomic_intptr_t"
+    "atomic_uintptr_t"
+    "atomic_size_t"
+    "atomic_ptrdiff_t")
+  "List of all atomic types in OpenCL.")
 
 (defvar opencl-c-vector-types
   (mapcan (lambda (type)
@@ -165,6 +266,7 @@ the appropriate place for that."
   glsl
   (append
    opencl-c-primitive-types
+   opencl-c-atomic-types
    opencl-c-vector-types
    opencl-c-descriptor-types
    ;; Use append to not be destructive on the return value below.
