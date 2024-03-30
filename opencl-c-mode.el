@@ -214,6 +214,7 @@
   "List of all other OpenCL types.")
 
 
+(defvar opencl-c-constants-rx (regexp-opt opencl-c-constants 'symbols))
 (defvar opencl-c-builtins-rx (regexp-opt opencl-c-builtins 'symbols))
 
 (defvar opencl-c-extensions-rx
@@ -236,7 +237,8 @@
 
 
 (defvar opencl-c-font-lock-keywords
-  `((,opencl-c-builtins-rx . font-lock-builtin-face)
+  `((,opencl-c-builtins-rx  . font-lock-builtin-face)
+    (,opencl-c-constants-rx . font-lock-constant-face)
     (,opencl-c-fp-contract-rx (2 '(face font-lock-keyword-face) nil lax)
                       (3 '(face font-lock-warning-face) nil lax))
     (,opencl-c-extensions-rx (2 'opencl-c-extension-face nil lax)
