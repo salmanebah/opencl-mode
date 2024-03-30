@@ -226,9 +226,19 @@
           (group-n 4 (or "warn" "disable"))))
   "Regex for OpenCL extensions.")
 
+(defvar opencl-c-fp-contract-rx
+  (rx (group-n 1 "#pragma")
+      (+ (in space))
+      (seq "OPENCL" (+ (in space)) "FP_CONTRACT" (+ (in space)))
+      (or (group-n 2 (or "ON" "DEFAULT"))
+          (group-n 3 "OFF")))
+  "Regex for OpenCL floating point contract switch.")
+
 
 (defvar opencl-c-font-lock-keywords
   `((,opencl-c-builtins-rx . font-lock-builtin-face)
+    (,opencl-c-fp-contract-rx (2 '(face font-lock-keyword-face) nil lax)
+                      (3 '(face font-lock-warning-face) nil lax))
     (,opencl-c-extensions-rx (2 'opencl-c-extension-face nil lax)
                      (3 '(face font-lock-keyword-face) nil lax)
                      (4 '(face font-lock-warning-face) nil lax)))
