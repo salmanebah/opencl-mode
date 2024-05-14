@@ -1,45 +1,50 @@
-#+TITLE: Opencl-mode
-#+AUTHOR: BAH SALMANE
-#+EMAIL: salmane.bah@u-bordeaux.fr
-#+DATE: 25-06-2014
+#+TITLE: OpenCL Major Mode
+#+AUTHOR: BAH SALMANE, Gustaf Waldemarson
+#+EMAIL: salmane.bah@u-bordeaux.fr, gustaf.waldemarson ~at~ gmail.com
+#+DATE: 2023-05-14
 #+DESCRIPTION:
 #+LANGUAGE: en
 
 [[https://melpa.org/#/opencl-mode][file:https://melpa.org/packages/opencl-mode-badge.svg]]
 
-Syntax coloring for opencl kernels
+This major mode for Emacs provides the following main features:
 
-** Installation with Melpa
+- Syntax coloring for OpenCL C kernels, including extra highlighting for
+  address-space qualifiers and built-in functions.
+
+- The ~opencl-lookup~ function (~C-c ! d~) performs documentation look-up of the
+  string in region or on point.
+
+
+** Installing Using Melpa
+
+Use the following commands to install from Melpa:
+
+- ~M-x package-refresh-contents~
+- ~M-x package-install opencl-mode~
+
+Alternatively, you can also install the package using e.g. [[https://github.com/jwiegley/use-package][use-package]] with the
+following snippet:
+
+#+begin_src emacs-lisp
+(use-package opencl-mode
+    :ensure t)
+#+end_src
+
+** Installing From Source
+
+1. Get the source code by cloning this repository:
    #+BEGIN_SRC sh
-   M-x package-install RET opencl-mode RET
+   $ git clone https://github.com/salmanebah/opencl-mode.git
    #+END_SRC
-** Installation from source code
-   1. Get the source code by either:
-      - Cloning this repository:
-        #+BEGIN_SRC sh
-        $ git clone https://github.com/salmanebah/opencl-mode.git
-        #+END_SRC
-      - Downloading the Zip
-   2. Put opencl-mode.el in your load path or optionally add this line to your emacs init file:
-     #+BEGIN_SRC elisp
-      (add-to-list 'load-path "/path/to/directory/where/opencl-mode.el/resides")
-     #+END_SRC
-   3. Add these lines to your emacs init file:
-     #+BEGIN_SRC elisp
-     (require 'opencl-mode)
-     (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))   
-     #+END_SRC
-** Notes
-   - The *opencl-lookup* function (bound to C-c ! d) allows one to lookup the documentation of
-     the string in region or on point. Starting from version 24.4, emacs comes with a built-in web browser, 
-     adding the following line  to the init file displays the documentation in emacs
-     #+BEGIN_SRC elisp
-      (setq browse-url-browser-function 'eww-browse-url)
-     #+END_SRC     
-     For versions of emacs prior to 24.4 and if the w3m browser is installed, adding 
-     the following line in the init file will have the same effect
-     #+BEGIN_SRC elisp
-      (setq browse-url-browser-function 'w3m-browse-url)
-     #+END_SRC
-   - Being a strict superset of the emacs c-mode, opencl-mode can be used to write code for
-     the host side, the benefit being the use of the *opencl-lookup* function.
+
+2. Put ~opencl-c-mode.el~ in your load-path or add this line to your
+   configuration:
+  #+BEGIN_SRC elisp
+   (add-to-list 'load-path "/path/to/directory/where/opencl-mode.el/resides")
+  #+END_SRC
+3. Add these lines to your personal configuration file:
+  #+BEGIN_SRC elisp
+  (require 'opencl-mode)
+  (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))
+  #+END_SRC
