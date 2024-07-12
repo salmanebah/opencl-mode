@@ -1,4 +1,4 @@
-#+TITLE: OpenCL Major Mode
+#+TITLE: OpenCL C Major Mode
 #+AUTHOR: BAH SALMANE, Gustaf Waldemarson
 #+EMAIL: salmane.bah@u-bordeaux.fr, gustaf.waldemarson ~at~ gmail.com
 #+DATE: 2023-05-14
@@ -12,7 +12,7 @@ This major mode for Emacs provides the following main features:
 - Syntax coloring for OpenCL C kernels, including extra highlighting for
   address-space qualifiers and built-in functions.
 
-- The ~opencl-lookup~ function (~C-c ! d~) performs documentation look-up of the
+- The ~opencl-c-lookup~ function (~C-c ! d~) performs documentation look-up of the
   string in region or on point.
 
 
@@ -21,13 +21,13 @@ This major mode for Emacs provides the following main features:
 Use the following commands to install from Melpa:
 
 - ~M-x package-refresh-contents~
-- ~M-x package-install opencl-mode~
+- ~M-x package-install opencl-c-mode~
 
 Alternatively, you can also install the package using e.g. [[https://github.com/jwiegley/use-package][use-package]] with the
 following snippet:
 
 #+begin_src emacs-lisp
-(use-package opencl-mode
+(use-package opencl-c-mode
     :ensure t)
 #+end_src
 
@@ -41,10 +41,10 @@ following snippet:
 2. Put ~opencl-c-mode.el~ in your load-path or add this line to your
    configuration:
   #+BEGIN_SRC elisp
-   (add-to-list 'load-path "/path/to/directory/where/opencl-mode.el/resides")
+   (add-to-list 'load-path "/path/to/directory/where/opencl-c-mode.el/resides")
   #+END_SRC
 3. Add these lines to your personal configuration file:
   #+BEGIN_SRC elisp
-  (require 'opencl-mode)
-  (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))
+  (require 'opencl-c-mode)
+  (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-c-mode))
   #+END_SRC
