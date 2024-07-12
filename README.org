@@ -5,7 +5,7 @@
 #+DESCRIPTION:
 #+LANGUAGE: en
 
-[[https://melpa.org/#/opencl-mode][file:https://melpa.org/packages/opencl-mode-badge.svg]]
+[[https://melpa.org/#/opencl-mode][file:https://melpa.org/packages/opencl-c-mode-badge.svg]]
 
 This major mode for Emacs provides the following main features:
 
