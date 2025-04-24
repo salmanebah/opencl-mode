@@ -734,16 +734,13 @@ will be handled.
 Do not try to modify this list for end user customizations; the
 `*-font-lock-extra-types' variable, where `*' is the mode prefix, is
 the appropriate place for that."
-  glsl
+  opencl-c
   (append
    opencl-c-primitive-types
    opencl-c-atomic-types
    opencl-c-vector-types
    opencl-c-descriptor-types
-   ;; Use append to not be destructive on the return value below.
-   (append
-    (c-lang-const c-primitive-type-kwds)
-    nil)))
+   (c-lang-const c-primitive-type-kwds c)))
 
 (c-lang-defconst c-modifier-kwds
   opencl-c
