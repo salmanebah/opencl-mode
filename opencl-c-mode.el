@@ -552,7 +552,7 @@
      "M_SQRT1_2"))
   "List of all mathematical constants in OpenCL C.")
 
-(defvar opencl-c-constants
+(defconst opencl-c-constants
   `("MAXFLOAT"
     "HUGE_VALF"
     "INFINITY"
@@ -612,66 +612,66 @@
     "CLK_FILTER_LINEAR")
   "List of OpenCL constant.")
 
-(defvar opencl-c-primitive-types
-  '("bool"
-    "char"
-    "uchar"
-    "short"
-    "ushort"
-    "int"
-    "uint"
-    "long"
-    "ulong"
-    "half"
-    "float"
-    "double"
-    "size_t"
-    "ptrdiff_t"
-    "intptr_t"
-    "uintptr_t"
-    "void")
-  "List of primitive types in OpenCL C.")
+(eval-and-compile
+  (defconst opencl-c-primitive-types
+    '("bool"
+      "char"
+      "uchar"
+      "short"
+      "ushort"
+      "int"
+      "uint"
+      "long"
+      "ulong"
+      "half"
+      "float"
+      "double"
+      "size_t"
+      "ptrdiff_t"
+      "intptr_t"
+      "uintptr_t"
+      "void")
+    "List of primitive types in OpenCL C.")
 
-(defvar opencl-c-atomic-types
-  '("atomic_int"
-    "atomic_uint"
-    "atomic_long"
-    "atomic_ulong"
-    "atomic_float"
-    "atomic_double"
-    "atomic_intptr_t"
-    "atomic_uintptr_t"
-    "atomic_size_t"
-    "atomic_ptrdiff_t"
-    "atomic_flag")
-  "List of all atomic types in OpenCL.")
+  (defconst opencl-c-atomic-types
+    '("atomic_int"
+      "atomic_uint"
+      "atomic_long"
+      "atomic_ulong"
+      "atomic_float"
+      "atomic_double"
+      "atomic_intptr_t"
+      "atomic_uintptr_t"
+      "atomic_size_t"
+      "atomic_ptrdiff_t"
+      "atomic_flag")
+    "List of all atomic types in OpenCL C.")
 
-(defvar opencl-c-vector-types
-  (mapcan (lambda (type)
-            (mapcar (lambda (n) (concat type (number-to-string n)))
-                    '(2 3 4 8 16)))
-          '("char" "uchar" "short" "ushort" "int" "uint"
-            "long" "ulong" "float" "double"))
-  "List of all vector types in OpenCL C.")
+  (defconst opencl-c-vector-types
+    (mapcan (lambda (type)
+              (mapcar (lambda (n) (concat type (number-to-string n)))
+                      '(2 3 4 8 16)))
+            '("char" "uchar" "short" "ushort" "int" "uint"
+              "long" "ulong" "float" "double"))
+    "List of all vector types in OpenCL C.")
 
-(defvar opencl-c-descriptor-types
-  '("image2d_t"
-    "image3d_t"
-    "image2d_array_t"
-    "image1d_t"
-    "image1d_array_t"
-    "image1d_buffer_t"
-    "image2d_depth_t"
-    "image2d_array_depth_t"
-    "sampler_t"
-    "queue_t"
-    "ndrange_t"
-    "clk_event_t"
-    "reserve_id_t"
-    "event_t"
-    "cl_mem_fence_flags")
-  "List of all other OpenCL types.")
-
+  (defconst opencl-c-descriptor-types
+    '("image2d_t"
+      "image3d_t"
+      "image2d_array_t"
+      "image1d_t"
+      "image1d_array_t"
+      "image1d_buffer_t"
+      "image2d_depth_t"
+      "image2d_array_depth_t"
+      "sampler_t"
+      "queue_t"
+      "ndrange_t"
+      "clk_event_t"
+      "reserve_id_t"
+      "event_t"
+      "cl_mem_fence_flags")
+    "List of all other OpenCL types."))
 
 (defvar opencl-c-constants-rx (regexp-opt opencl-c-constants 'symbols))
 (defvar opencl-c-builtins-rx (regexp-opt opencl-c-builtins 'symbols))
