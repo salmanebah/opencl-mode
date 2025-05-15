@@ -26,16 +26,6 @@ jobs:
           - 29.4
           - 30.1
         experimental: [false]
-        include:
-        - os: ubuntu-latest
-          emacs-version: snapshot
-          experimental: true
-        - os: macos-latest
-          emacs-version: snapshot
-          experimental: true
-        - os: windows-latest
-          emacs-version: snapshot
-          experimental: true
         exclude:
           - os: macos-latest
             emacs-version: 26.3
